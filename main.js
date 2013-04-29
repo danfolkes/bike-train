@@ -256,17 +256,19 @@
 	  }
 	  $(function() {
 		var count = 0;
-		$( "#train_direction_radios_div" ).buttonset();
+		//$( "#train_direction_radios_div" ).buttonset();
 		
 		$( "#buttonSlideDown" ).click(function( event ) {
 			event.preventDefault();
 			$('#chkAutoTime').attr('checked', false);
-			$( slidertimeselector ).slider( "option", "value", $( slidertimeselector ).slider( "option", "value") -60 );
+			//$( slidertimeselector ).slider( "option", "value", $( slidertimeselector ).slider( "option", "value") -60 );
+			$( slidertimeselector ).val($( slidertimeselector ).val() -60);
 		});
 		$( "#buttonSlideUp" ).click(function( event ) {
 			event.preventDefault();
 			$('#chkAutoTime').attr('checked', false);
-			$( slidertimeselector ).slider( "option", "value", $( slidertimeselector ).slider( "option", "value") +60 );
+			//$( slidertimeselector ).slider( "option", "value", $( slidertimeselector ).slider( "option", "value") +60 );
+			$( slidertimeselector ).val($( slidertimeselector ).val() +60);
 		});
 		
 		/*$("#train_time").timepicker({
@@ -314,19 +316,20 @@
 			$('#chkAutoTime').attr('checked', false);
 		  }
 		});
-		$( "#time" ).val( "" + $( "#slider-time" ).slider( "value" ) );
+		//$( "#time" ).val( "" + $( "#slider-time" ).slider( "value" ) );
+		$( "#time" ).val( "" + $( "#slider-time" ).val() );
 		var accordionicons = {
 		  header: "ui-icon-circle-arrow-e",
 		  activeHeader: "ui-icon-circle-arrow-s"
 		};
-		$( ".accordion" ).accordion({
+		/*$( ".accordion" ).accordion({
 			icons: accordionicons,
 			heightStyle: "content",
 			collapsible: true,
 			active: false
-		});
+		});*/
 		
-		$( ".tt" ).tooltip();
+		//$( ".tt" ).tooltip();
 		
 		
 		var handlechkAutoTime;
@@ -343,7 +346,8 @@
 					if (value >= max)
 						value = min;
 						
-					$( slidertimeselector ).slider( "option", "value", value );
+					//$( slidertimeselector ).slider( "option", "value", value );
+					$( slidertimeselector ).val( value );
 					//alert(value);
 					
 				}
@@ -360,10 +364,12 @@
 			}
 		});
 		var now = new Date();
-		$( "#slider-time" ).slider("option", "value", (now.getHours()*60*60) + (now.getMinutes()*60) + (now.getSeconds()) );
+		//$( "#slider-time" ).slider("option", "value", (now.getHours()*60*60) + (now.getMinutes()*60) + (now.getSeconds()) );
+		$( "#slider-time" ).val((now.getHours()*60*60) + (now.getMinutes()*60) + (now.getSeconds()) );
+		
 		$('#chkAutoTime').attr('checked', true);
 		AddhandlechkAutoTime();
-		onResize();
+		//onResize();
 	});
 	function onResize() {
 		if ($(window).width() > 800)
@@ -372,11 +378,10 @@
 			$("html").attr("class","skinny");
 		else
 			$("html").attr("class","fat");
-			
 	}
-	$(window).resize(function() {
+	/*$(window).resize(function() {
 		onResize();
-	});
+	});*/
 	function getLatLangFromOverViewPath(overviewpath, t) {
 		//new google.maps.LatLng(overviewpath[t].mb, overviewpath[t].nb
 		if ((overviewpath[t].mb == null)||(overviewpath[t].nb == null))
@@ -455,11 +460,11 @@
 						cache: false,
 						data: { gettable: "UserRoute", 
 							where: "routeid = " + rid + " AND startposition = " + direction,
-							addcount: true
+							addcount: true, DaysCount: true
 							},
 							success : function(data, statusText){
 								$.each(data,  function() {
-									$(".train_time_div label[for='train_time_" + this['time'] + "']").append("(" + this.Count + ")");
+									$(".train_time_div label[for='train_time_" + this['time'] + "'] .ui-btn-inner .ui-btn-text ").append("(" + this.DaysCount + ")");
 								});
 							},
 							error: function (request, status, error) {
@@ -467,53 +472,40 @@
 							}
 					});
 				}
-				//show time
-				
 			} else {
-			
-				
-			
-			
 				$.ajax({
 					  url: "serv.php",
 					  dataType:"json",
 					  type: "POST",
 					  cache: false,
-					  data: { gettable: "Waypoint", where: "routeid = " + rid },
+					  data: { gettable: "Waypoint", where: "routeid = " + rid + " AND position <= 1" },
 					  success : function(data, statusText) {
-						//$("#results").append(html);
-						//alert(data[0].name);
-						$("#train_direction_radios_div [for='train_direction_radios_blue']  .ui-button-text").html(data[0].name);
-						
-						//
-						//loop through extradata, look for id: rid
-						//	if id=rid
-						//		for each path in polys.path
-						//			
-						//		map.fitBounds(bounds.getCenter());
-						
-						$.ajax({
-							url: "serv.php",
-							dataType:"json",
-							type: "POST",
-							cache: false,
-							data: { gettable: "UserRoute", 
-								where: "routeid = " + rid + " AND startposition = 0",
-								addcount: true
-								},
-								error: function (request, status, error) {
-									$("#train_direction_radios_div [for='train_direction_radios_blue']  .ui-button-text").append("(0)");
-									$("#train_direction_radios_div [for='train_direction_radios_red']  .ui-button-text").append("(0)");
-								},
-								success : function(data, statusText){
-									//$("#results").append(html);
-									//alert(data[0].name);
-									$("#train_direction_radios_div [for='train_direction_radios_blue']  .ui-button-text").append("(" + data[0].Count + ")");
-									$("#train_direction_radios_div [for='train_direction_radios_red']  .ui-button-text").append("(" + data[0].Count + ")");
-								}
-						});
-
-						$("#train_direction_radios_div [for='train_direction_radios_red'] .ui-button-text").html(data[1].name);
+						$("#train_direction_radios_div [for='train_direction_radios_blue'] .ui-btn-inner  .ui-btn-text").html(data[0].name);
+						updatetrain_direction_radios_div_count(0);
+						updatetrain_direction_radios_div_count(1);
+						function updatetrain_direction_radios_div_count(startposition) {
+							$.ajax({
+								url: "serv.php",
+								dataType:"json",
+								type: "POST",
+								cache: false,
+								data: { gettable: "UserRoute", 
+									where: "routeid = " + rid + " AND startposition = "+ startposition,
+									addcount: true, DaysCount: true
+									},
+									error: function (request, status, error) {
+										if (startposition==0) $("#train_direction_radios_div [for='train_direction_radios_blue'] .ui-btn-inner .ui-btn-text").append("(0)");
+										else if (startposition==1) $("#train_direction_radios_div [for='train_direction_radios_red'] .ui-btn-inner .ui-btn-text").append("(0)");
+									},
+									success : function(data, statusText){
+										//$("#results").append(html);
+										//alert(data[0].name);
+										if (startposition==0) $("#train_direction_radios_div [for='train_direction_radios_blue'] .ui-btn-inner .ui-btn-text").append("(" + (parseInt(data[0].DaysCount) || 0) + ")");
+										else if (startposition==1) $("#train_direction_radios_div [for='train_direction_radios_red'] .ui-btn-inner .ui-btn-text").append("(" + (parseInt(data[0].DaysCount) || 0) + ")");
+									}
+							});
+						}
+						$("#train_direction_radios_div [for='train_direction_radios_red'] .ui-btn-text").html(data[1].name);
 					}
 				});
 			}

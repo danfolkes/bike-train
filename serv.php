@@ -9,6 +9,8 @@ try {
 			$SQL = "SELECT * ";
 			if (isset($_POST['addcount']))
 				$SQL .= ", COUNT(*) as Count ";
+			if (isset($_POST['DaysCount']))
+				$SQL .= ",  length(days) - length(replace(days, ',', ''))+1 as DaysCount ";
 			$SQL .= " FROM {$_POST['gettable']} ";
 			
 			if (isset($_POST['where'])) {

@@ -118,21 +118,26 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 ?><!DOCTYPE html>
 <html class='fat'>
   <head>
-    <title>Bike Train</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Richmond Bike Train</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" />
 	
     <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
 	<link href="favicon.gif" rel="icon" type="image/gif" />
 	
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
-	<script type="text/javascript" src="jquery.timepicker.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+	<!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />-->
 	<link rel="stylesheet" type="text/css" href="jquery.timepicker.css" />
 	<link rel="stylesheet" type="text/css" href="main.css" />
-	<script src="jstorage.min.js"></script>
+	
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<!--<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>-->
+	<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+	<script src="jquery.timepicker.js" type="text/javascript" ></script>
+	
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
+	
+	<script src="jstorage.min.js" type="text/javascript"></script>
 	<script type="text/javascript" >
 		var requests = [];
 		var extradata = [];
@@ -188,46 +193,54 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 		}
 		
 	?>
+	
+	
 	</script>
 	
 	<script type="text/javascript"  src='main.js'></script>
   </head>
   <body>
+<div data-role="page" id="mypage">
+ <div data-role="header" >
+	<h1>Richmond Bike Train</h1>
+	<a href="#left-panel" data-icon="arrow-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-icon-nodisc">Saved Routes</a>
+</div><!-- /header -->
+<div data-role="content">
 	<div class='form'>
-		<h1><a href='./'><img src="BikeTrain100x100.gif" alt="BikeTrain100x100" /> Bike Train</a></h1>
-		<?php
-  
-		if (isset($cookieidentity)) {
-			echo '<small> | <a href="?logout">Logout</a></small>';
-		}
-		else
-		{
-			?>
-			<form action="?login" method="post">
-				<small><button>Login with Google</button></small>
-			</form>
-			<?php
-		}
-		?>
-			<p >
+		<div style='height:115px;width: 100%;background-image: url(BikeTrain100x100.gif);'></div>
+			<p>
 				The Bike Train is a way for commuter bicyclers to coordinate routes and schedules to make bike riding in the city safer and more fun.
 				<br />
 				<ul class='tt'>
 					<li>
-						<a href="?login" title="this is only to verify your humanity and to remember your routes.">Login with Google</a>
+						<?php
+						if (isset($cookieidentity)) {
+							echo '1. You are logged in.  We can save routes now!';
+						}
+						else
+						{
+							?>
+								1. <a data-ajax="false" href="?login" title="" data-icon="alert" data-theme="e"  data-role="button" data-inline="true">Login with Google</a>
+								( this is only to verify your humanity and to remember your routes. )
+							<?php
+						}
+						?>
+						
 					</li>
 					<li title="You may take anywhere from one to five routes to get somewhere.">
-						Second, Review the map and see which routes you would take. 
+						2. Review the <a data-ajax="false" href='#maplink'>map</a> and see which routes you would take. 
 					</li>
 					<li>
-						Then, for each leg of the train, fill out the form below.
+						3. for each leg of the train, fill out the form below.
 					</li>
 					<li>
-						Finally, you will be able to manage your routes and see how many other people will be on the train section when you are.
+						4. you will be able to <a href='#left-panel'>manage your routes</a> and see how many other people will be on the train section when you are.
 					</li>
 				</ul> 
 				
 			</p>
+			
+		
 			<div class='JoinTheTrain'>
 				<?php
 					if (isset($insertmessage))
@@ -239,6 +252,7 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 						<h3>#1. Select a Train</h3>
 						<div id="routeselector"></div>
 						<div style='height:200px;overflow:auto;' class="routeselector">
+							<fieldset data-role="controlgroup" data-mini="true">
 							<?php
 							try {
 								if ($db = new Sqlite3('db/biketrain.SQLite')) {
@@ -246,16 +260,17 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 
 									while ($Route = $Routes->fetchArray()) {
 										//echo "<br/>>route: {$Route[id]}-{$Route[name]}";
-										$Waypoints = $db->query("SELECT *, (SELECT COUNT(*) FROM UserRoute WHERE routeid = {$Route[id]}) as Count FROM Waypoint WHERE routeid={$Route[id]} AND position <= 1  ORDER BY position LIMIT 2 ");
+										$Waypoints = $db->query("SELECT *, (SELECT COUNT(*) FROM UserRoute WHERE routeid = {$Route[id]}) as Count , (SELECT (length(days) - length(replace(days, ',', ''))+1) FROM UserRoute WHERE routeid = {$Route[id]}) as DaysCount FROM Waypoint WHERE routeid={$Route[id]} AND position <= 1  ORDER BY position LIMIT 2 ");
 										echo "\r\n<input type='radio' onclick='updateform(\"routeselector\")' id='routeselector_id{$Route[id]}' name='routeselector' value='{$Route[id]}' />";
 										echo "<label for='routeselector_id{$Route[id]}' >";
 										//echo "{$Route[id]}-{$Route[name]}<br/><hr />";
 										$userroutes = 0;
 										while ($Waypoint = $Waypoints->fetchArray()) {
 											echo " - [{$Waypoint[name]}]";
-											$userroutes = $Waypoint[Count];
+											if ($Waypoint[DaysCount]>0)
+												$userroutes = $Waypoint[DaysCount];
 										}
-										echo " ({$userroutes} riders)</label><br/>";
+										echo " ({$userroutes} riders)</label>";
 									}
 									$db->close();
 								}
@@ -263,23 +278,26 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 								echo $e->getMessage();
 							}
 							?>
+							</fieldset>
 						</div>
 					</div>
-					<div class='formsection'>
+					<div class='formsection' >
 						<h3>#S. Starting Point:</h3>
 						<div class='train_direction'>
-							<div id="train_direction_radios_div">
+							<div id="train_direction_radios_div" >
+								<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
 								<input onclick='updateform("direction")' type="radio" 
 									id="train_direction_radios_blue" 
 									name="train_direction_radios" 
-									value='0' />
+									value='0'  />
 								<label for="train_direction_radios_blue" class='tt' title='select this if you are leaving from this location.'>Blue Bike</label>
 								
 								<input onclick='updateform("direction")' type="radio" 
 									id="train_direction_radios_red" 
 									name="train_direction_radios" 
 									value='1' />
-								<label for="train_direction_radios_red" class='tt' title='select this if you are leaving from this location.'>Red Bike</label>
+								<label  for="train_direction_radios_red" class='tt' title='select this if you are leaving from this location.'>Red Bike</label>
+								</fieldset>
 							</div>
 						</div>
 						<label>please view the map and choose the direction.</label>
@@ -290,94 +308,62 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 						<label for="train_time">select the time of day that you will be starting your trip</label>-->
 						<div style='height:200px;overflow:auto;' class="train_time_div">
 						<?php
-							$date = new DateTime("2010-01-01 8:00 am");
-							$date2 = new DateTime("2010-01-01");
+							$sD = "2010-01-01 8:00 am";
+							$date = new DateTime($sD);
+							$date2 = new DateTime($sD);
 							$date2->modify("+1 day");
 							$i = 0;
+							echo "<fieldset data-role=\"controlgroup\" data-mini=\"true\">";
 							while ($date < $date2) {
 								$i++;
-								echo "<br /><input onclick='updateform(\"time\")' type='radio' name='train_time' id='train_time_{$date->format('Hi')}' value='{$date->format('Hi')}' />";
+								echo "<input onclick='updateform(\"time\")' type='radio' name='train_time' id='train_time_{$date->format('Hi')}' value='{$date->format('Hi')}' />";
 								echo "<label for='train_time_{$date->format('Hi')}'>{$date->format('Hi')} - {$date->format('h:i A')}</label>";
 								$date = $date->modify("+15 minutes");
 							}	
+							echo "</fieldset>";
 						?>
 						</div>
 					</div>
 					<div class='formsection'>
 						<h3>#4 Day:</h3>
 						<div id="train_days" class="train_days_count">
-							<table>
-								<tr>
-									<td>
-										Days:
-									</td>
-									<td>
-										<input type="checkbox" id="train_days_su" 	name="train_days_su" />						<label for="train_days_su">su</label>
-									</td>
-									<td>
-										<input type="checkbox" id="train_days_m" 		name="train_days_m" 	checked="checked"/>	<label for="train_days_m">m</label>
-									</td>
-									<td>
-										<input type="checkbox" id="train_days_t" 		name="train_days_t" 	checked="checked"/>	<label for="train_days_t">t</label>
-									</td>
-									<td>
-										<input type="checkbox" id="train_days_w" 		name="train_days_w" 	checked="checked"/>	<label for="train_days_w">w</label>
-									</td>
-									<td>
-										<input type="checkbox" id="train_days_th" 	name="train_days_th" 	checked="checked"/>	<label for="train_days_th">th</label>
-									</td>
-									<td>
-										<input type="checkbox" id="train_days_f" 		name="train_days_f" 	checked="checked"/>	<label for="train_days_f">f</label>
-									</td>
-									<td>
-										<input type="checkbox" id="train_days_sa" 	name="train_days_sa" />						<label for="train_days_sa">sa</label>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										Count:
-									</td>
-									<td>
-										<span class="train_days_su">0</span>
-									</td>
-									<td>
-										<span class="train_days_m">0</span>
-									</td>
-									<td>
-										<span class="train_days_t">0</span>
-									</td>
-									<td>
-										<span class="train_days_w">0</span>
-									</td>
-									<td>
-										<span class="train_days_th">0</span>
-									</td>
-									<td>
-										<span class="train_days_f">0</span>
-									</td>
-									<td>
-										<span class="train_days_sa">0</span>
-									</td>
-								</tr>
-							</table>
+							<fieldset data-role="controlgroup" data-mini="true">
+								<input type="checkbox" id="train_days_su" 	name="train_days_su" data-mini="true"/>
+								<label for="train_days_su">su <span class="train_days_su">0</span></label>
+								
+								<input type="checkbox" id="train_days_m" 		name="train_days_m" 	checked="checked" data-mini="true"/>	
+								<label for="train_days_m">m <span class="train_days_m">0</span></label>
+									
+								<input type="checkbox" id="train_days_t" 		name="train_days_t" 	checked="checked" data-mini="true"/>	
+								<label for="train_days_t">t <span class="train_days_t">0</span></label>
+										
+								<input type="checkbox" id="train_days_w" 		name="train_days_w" 	checked="checked" data-mini="true"/>	
+								<label for="train_days_w">w <span class="train_days_w">0</span></label>
+									
+								<input type="checkbox" id="train_days_th" 	name="train_days_th" 	checked="checked" data-mini="true"/>	
+								<label for="train_days_th">th <span class="train_days_th">0</span></label>
+								
+								<input type="checkbox" id="train_days_f" 		name="train_days_f" 	checked="checked" data-mini="true"/>	
+								<label for="train_days_f">f <span class="train_days_f">0</span></label>
+								
+								<input type="checkbox" id="train_days_sa" 	name="train_days_sa" data-mini="true"/>						
+								<label for="train_days_sa">sa <span class="train_days_sa">0</span></label>
+							</fieldset>
 						</div>
 					</div>
 					<div class='formsection'>
-						<h3>#5 Nickname: (optional)</h3>
-						<input type="text" id="train_nick" name="train_nick" size="40" />
-						<label for="train_nick">Name your route.  Example: Work 1</label>
+						<input type="text" id="train_nick" name="train_nick" size="40" placeholder="Nickname.  Example: Work 1" />
+						<label for="train_nick"></label>
 					</div>
 					<div class='formsection'>
-						<h3>Guests: (optional)</h3>
-						<select id="train_guest" name="train_guest">
-							<option>0</option>
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
+						<select id="train_guest" name="train_guest" data-mini="true">
+							<option value="0">0 Guests</option>
+							<option>1 Guests</option>
+							<option>2 Guests</option>
+							<option>3 Guests</option>
+							<option>4 Guests</option>
+							<option>5 Guests</option>
 						</select>
-						<label for="train_guest">Use this if you know others will be coming but they have not signed up</label>
 					</div>
 					<div class='train_submit formsection' >
 						<?php
@@ -389,15 +375,38 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 							<?php
 						} else {
 							?>
-								<input type='submit' value='save' />
+								Please review your selections before saving.
+								<input type='submit' value='SAVE' data-theme="e" />
 							<?php
-							
 						}
 						?>
 					</div>
 				</form>
+				<div class='mapandtimediv'>
+					<a name="maplink" id="maplink">
+					<h3>User Map:</h3>
+					<p>This area displays where and when other users are on the train:</p>
+					<div id="map_canvas" style="height:30em;"></div>
+					<div class='timediv'>
+						<div>
+							<label for="time">Time:</label>
+							<input type="text" id="time" style="border: 0; color: #f6931f; font-weight: bold;" />
+							<input type='checkbox' name='chkAutoTime' id='chkAutoTime' /><label for="chkAutoTime">Keep Time</label>
+						</div>
+						
+						<a href='' id="buttonSlideDown"  style="display:inline-block;width:5%">&lt;&lt;</a>
+						<div id="slider-time" style="display:inline-block;width:80%"></div>
+						<a href='' id="buttonSlideUp" style="display:inline-block;width:5%" >&gt;&gt;</a>
+							
+						<div id="directions_panel" style="margin:20px;background-color:#FFEE77;"></div>
+						<div class='loadingmap'>loading map...</div>
+					</div>
+				</div>
 			</div>
-			
+	</div>
+</div><!-- /content -->
+<div data-role="panel" id="left-panel" data-position="left" data-theme="c" data-dismissible="false">
+	<a href="#" data-rel="close">Close menu</a>
 				<?php
 					if (isset($cookieidentity)) {
 						try {
@@ -443,26 +452,33 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 					
 					?>
 				
-			<div>
-				<a href="https://docs.google.com/forms/d/1hlYE0qoImoh8scdKU_alUK-47ppjisRKmZALE-YIsAo/viewform" >Contact Form</a>
-			</div>
-	</div>
-	<div class='mapandtimediv'>
-		<div class='timediv'>
-			<div>
-				<label for="time">Time:</label>
-				<input type="text" id="time" style="border: 0; color: #f6931f; font-weight: bold;" />
-				<input type='checkbox' name='chkAutoTime' id='chkAutoTime' /><label for="chkAutoTime">Keep Time</label>
-			</div>
-			
-			<a href='' id="buttonSlideDown"  style="display:inline-block;width:5%">&lt;</a>
-			<div id="slider-time" style="display:inline-block;width:80%"></div>
-			<a href='' id="buttonSlideUp" style="display:inline-block;width:5%" >&gt;</a>
-				
-			<div id="directions_panel" style="margin:20px;background-color:#FFEE77;"></div>
-			<div class='loadingmap'>loading map...</div>
-		</div>
-		<div id="map_canvas" ></div>
-	</div>
+</div><!-- /panel --> 
+<div data-role="footer">
+	<h1>
+		Facebook 
+		| Twitter 
+		| <a href="https://docs.google.com/forms/d/1hlYE0qoImoh8scdKU_alUK-47ppjisRKmZALE-YIsAo/viewform" >Contact Form</a>
+		| <a data-ajax="false" href="#maplink" data-icon="arrow-r" data-iconpos="notext2" data-shadow="false" data-iconshadow="false" class="ui-icon-nodisc">Map</a>
+		<?php
+		if (isset($cookieidentity)) {
+		?>
+			| <a href="#left-panel" data-icon="arrow-l" data-iconpos="notext2" data-shadow="false" data-iconshadow="false" class="ui-icon-nodisc22">Saved Routes</a>
+			| <a href="?logout">logout</a>
+		<?php
+		}
+		else
+		{
+		?>
+			| Saved Routes
+			| <a href="?login">login</a>
+		<?php
+		}
+		?>
+	</h1>
+	
+	
+</div><!-- /footer -->
+</div><!-- page -->
+
   </body>
 </html>

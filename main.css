@@ -1,31 +1,34 @@
 
-		* {
+		/** {
 			font-size:.95em;
 			font-family:sans-serif;
+		}
+		html {
+			padding-right:15px;
 		}
 		select option{
 			font-size:.95em;
 		}
 		.ui-button-text {
 			font-size:.8em;
-		}
+		}*/
 		#map_canvas {
 			height:800px;
-			width:100%;
 		}
-		.mapandtimediv, .form {
+		/*.mapandtimediv, .form {
 			width:50%;
 			float:left;
 		}
 		
 		.america .form  {
-			width:50%;
+			width:40%;
+			padding:0 10% 0 0;
 		}
 		.america .mapandtimediv {
 			width:50%;
 			height:100%;
-		}
-		.skinny .mapandtimediv, .skinny .form  {
+		}*/
+		/*.skinny .mapandtimediv, .skinny .form  {
 			width:100%;
 			float:none;
 		}
@@ -34,6 +37,9 @@
 		}
 		.formsection {
 			margin:10px;
+		}*/
+		.form {
+			
 		}
 		
 		
