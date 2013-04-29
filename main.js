@@ -261,14 +261,18 @@
 		$( "#buttonSlideDown" ).click(function( event ) {
 			event.preventDefault();
 			$('#chkAutoTime').attr('checked', false);
+			$("#chkAutoTime").checkboxradio("refresh");
 			//$( slidertimeselector ).slider( "option", "value", $( slidertimeselector ).slider( "option", "value") -60 );
 			$( slidertimeselector ).val($( slidertimeselector ).val() -60);
+			ChangeSlide();
 		});
 		$( "#buttonSlideUp" ).click(function( event ) {
 			event.preventDefault();
 			$('#chkAutoTime').attr('checked', false);
+			$("#chkAutoTime").checkboxradio("refresh");
 			//$( slidertimeselector ).slider( "option", "value", $( slidertimeselector ).slider( "option", "value") +60 );
 			$( slidertimeselector ).val($( slidertimeselector ).val() +60);
+			ChangeSlide();
 		});
 		
 		/*$("#train_time").timepicker({
@@ -282,16 +286,18 @@
 		  forceRoundTime: true
 		  
 		});*/
-		function ChangeSlide(ui) {
+		function ChangeSlide() {
 			var now = new Date();
 			//var d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(ui.value / 60 / 60), (ui.value / 60), (ui.value % 60), 0);
 
 			
-			var d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(ui.value / 60 / 60), ((ui.value/60)%60), (ui.value%60), 0);
+			var sliderval = $( "#slider-time" ).val();
+			
+			var d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(sliderval / 60 / 60), ((sliderval/60)%60), (sliderval%60), 0);
 			$( "#time" ).val(d.toTimeString());
 			
 			offset = 0;
-			count = ui.value % 900;
+			count = sliderval % 900;
 			if (count == 0)
 				offset = 0;
 			else
@@ -304,7 +310,7 @@
 			}
 		}
 		
-		$( "#slider-time" ).slider({
+		/*$( "#slider-time" ).slider({
 		  value:0,
 		  min: 0,
 		  max: 86400,
@@ -314,6 +320,17 @@
 		  slide: function( event, ui ) {
 			ChangeSlide(ui);
 			$('#chkAutoTime').attr('checked', false);
+		  }
+		});*/
+		$( "#slider-time" ).slider({
+		  start: function( event, ui ) {
+			ChangeSlide();
+		  },
+		  stop: function( event, ui ) {
+			ChangeSlide();
+		  },
+		  start: function( event, ui ) {
+			ChangeSlide();
 		  }
 		});
 		//$( "#time" ).val( "" + $( "#slider-time" ).slider( "value" ) );
@@ -337,9 +354,10 @@
 			handlechkAutoTime = setInterval(function() {
 				if ($('#chkAutoTime').is(':checked')) {
 					
-					var step = $( slidertimeselector ).slider( "option", "step" );
-					var min = $( slidertimeselector ).slider( "option", "min" );
-					var max = $( slidertimeselector ).slider( "option", "max" );
+					var step = $( slidertimeselector ).attr("step");
+					var min = $( slidertimeselector ).attr("min");
+					var max = $( slidertimeselector ).attr("max");
+					//alert(max);
 					var now = new Date();
 					var value = (now.getHours()*60*60) + (now.getMinutes()*60) + (now.getSeconds()) ;
 					
@@ -348,6 +366,8 @@
 						
 					//$( slidertimeselector ).slider( "option", "value", value );
 					$( slidertimeselector ).val( value );
+					$( slidertimeselector ).slider('refresh');
+					ChangeSlide();
 					//alert(value);
 					
 				}
@@ -368,6 +388,7 @@
 		$( "#slider-time" ).val((now.getHours()*60*60) + (now.getMinutes()*60) + (now.getSeconds()) );
 		
 		$('#chkAutoTime').attr('checked', true);
+		$("#chkAutoTime").checkboxradio("refresh");
 		AddhandlechkAutoTime();
 		//onResize();
 	});

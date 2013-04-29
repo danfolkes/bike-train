@@ -207,9 +207,9 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 </div><!-- /header -->
 <div data-role="content">
 	<div class='form'>
-		<div style='height:115px;width: 100%;background-image: url(BikeTrain100x100.gif);'></div>
+		<div class='biketrainbanner'></div>
 			<p>
-				The Bike Train is a way for commuter bicyclers to coordinate routes and schedules to make bike riding in the city safer and more fun.
+				The <b>Bike Train</b> is a way for commuter bicyclers to coordinate routes and schedules to make bike riding in the city <b>safer</b> and <b>more fun</b>.
 				<br />
 				<ul class='tt'>
 					<li>
@@ -388,16 +388,22 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 					<p>This area displays where and when other users are on the train:</p>
 					<div id="map_canvas" style="height:30em;"></div>
 					<div class='timediv'>
-						<div>
-							<label for="time">Time:</label>
-							<input type="text" id="time" style="border: 0; color: #f6931f; font-weight: bold;" />
-							<input type='checkbox' name='chkAutoTime' id='chkAutoTime' /><label for="chkAutoTime">Keep Time</label>
-						</div>
+						<fieldset class="ui-grid-a">
+							<div class="ui-block-a">
+								<input type="text" id="time" style="border: 0; color: #f6931f; font-weight: bold;" data-inline="true" />
+							</div>
+							<div class="ui-block-b"><input type='checkbox' name='chkAutoTime' id='chkAutoTime'  data-inline="true" /><label for="chkAutoTime">Keep Time</label></div>
+						</fieldset>
 						
-						<a href='' id="buttonSlideDown"  style="display:inline-block;width:5%">&lt;&lt;</a>
-						<div id="slider-time" style="display:inline-block;width:80%"></div>
-						<a href='' id="buttonSlideUp" style="display:inline-block;width:5%" >&gt;&gt;</a>
-							
+						<div class="ui-grid-a">
+							<div class="ui-block-a">
+								<a href='' id="buttonSlideDown"  style="" data-role="button" data-theme="a" data-inline="true">&lt;&lt;</a>
+								<a href='' id="buttonSlideUp" style="" data-role="button" data-theme="a" data-inline="true">&gt;&gt;</a>
+							</div>
+							<div class="ui-block-b">
+								<input type="range" name="slider-time" id="slider-time" min="0" max="86400" value="0" data-inline="true">
+							</div>
+						</div>
 						<div id="directions_panel" style="margin:20px;background-color:#FFEE77;"></div>
 						<div class='loadingmap'>loading map...</div>
 					</div>
@@ -455,8 +461,8 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 </div><!-- /panel --> 
 <div data-role="footer">
 	<h1>
-		Facebook 
-		| Twitter 
+		<a href="https://github.com/danfolkes/bike-train/">Start a Bike Train</a>
+		| <a href="https://twitter.com/search/realtime?q=%23BikeTrain">#BikeTrain</a>
 		| <a href="https://docs.google.com/forms/d/1hlYE0qoImoh8scdKU_alUK-47ppjisRKmZALE-YIsAo/viewform" >Contact Form</a>
 		| <a data-ajax="false" href="#maplink" data-icon="arrow-r" data-iconpos="notext2" data-shadow="false" data-iconshadow="false" class="ui-icon-nodisc">Map</a>
 		<?php

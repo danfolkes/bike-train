@@ -1,5 +1,6 @@
+		/*
 
-		/** {
+		*{
 			font-size:.95em;
 			font-family:sans-serif;
 		}
@@ -11,11 +12,8 @@
 		}
 		.ui-button-text {
 			font-size:.8em;
-		}*/
-		#map_canvas {
-			height:800px;
 		}
-		/*.mapandtimediv, .form {
+		.mapandtimediv, .form {
 			width:50%;
 			float:left;
 		}
@@ -37,9 +35,21 @@
 		}
 		.formsection {
 			margin:10px;
-		}*/
+		}
 		.form {
 			
+		}*/
+		
+		#map_canvas {
+			height:800px;
 		}
 		
 		
+		.biketrainbanner {
+			height:56px;
+			width: 100%;
+			background-image: url(lunanaut_Bicycle_Sign_Symbol.png);
+		}
+		input.ui-slider-input {
+        display : none !important;
+    }
