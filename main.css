@@ -1,55 +1,88 @@
-		/*
+/*
 
-		*{
-			font-size:.95em;
-			font-family:sans-serif;
-		}
-		html {
-			padding-right:15px;
-		}
-		select option{
-			font-size:.95em;
-		}
-		.ui-button-text {
-			font-size:.8em;
-		}
-		.mapandtimediv, .form {
-			width:50%;
-			float:left;
-		}
-		
-		.america .form  {
-			width:40%;
-			padding:0 10% 0 0;
-		}
-		.america .mapandtimediv {
-			width:50%;
-			height:100%;
-		}*/
-		/*.skinny .mapandtimediv, .skinny .form  {
-			width:100%;
-			float:none;
-		}
-		.skinny .mapandtimediv  {
-			height:90%;
-		}
-		.formsection {
-			margin:10px;
-		}
-		.form {
-			
-		}*/
-		
-		#map_canvas {
-			height:800px;
-		}
-		
-		
-		.biketrainbanner {
-			height:56px;
-			width: 100%;
-			background-image: url(lunanaut_Bicycle_Sign_Symbol.png);
-		}
-		input.ui-slider-input {
-        display : none !important;
-    }
+*{
+	font-size:.95em;
+	font-family:sans-serif;
+}
+html {
+	padding-right:15px;
+}
+select option{
+	font-size:.95em;
+}
+.ui-button-text {
+	font-size:.8em;
+}
+.mapandtimediv, .form {
+	width:50%;
+	float:left;
+}
+
+.america .form  {
+	width:40%;
+	padding:0 10% 0 0;
+}
+.america .mapandtimediv {
+	width:50%;
+	height:100%;
+}*/
+/*.skinny .mapandtimediv, .skinny .form  {
+	width:100%;
+	float:none;
+}
+.skinny .mapandtimediv  {
+	height:90%;
+}
+.formsection {
+	margin:10px;
+}
+.form {
+	
+}*/
+
+#map_canvas {
+	height:800px;
+}
+
+
+.biketrainbanner {
+	height:56px;
+	width: 100%;
+	background-image: url(lunanaut_Bicycle_Sign_Symbol.png);
+}
+input.ui-slider-input {
+	display : none !important;
+	
+}
+.ui-slider-track {
+	margin: 0 15px 0 0px !important;
+	
+}
+
+.accordion {
+	font-size:.75em;
+}
+.savedroutename {
+	padding-left:1em;
+}
+.savedroutes, .manageroute {
+	border: .1em black dashed;
+}
+
+@media ( min-width: 40em ) {
+	/* Show the table header rows and set all cells to display: table-cell */
+	.my-custom-breakpoint td,
+	.my-custom-breakpoint th,
+	.my-custom-breakpoint tbody th,
+	.my-custom-breakpoint tbody td,
+	.my-custom-breakpoint thead td,
+	.my-custom-breakpoint thead th {
+		display: table-cell;
+		margin: 0;
+	}
+	/* Hide the labels in each cell */
+	.my-custom-breakpoint td .ui-table-cell-label,
+	.my-custom-breakpoint th .ui-table-cell-label {
+		display: none;
+	}
+}

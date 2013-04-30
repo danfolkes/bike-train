@@ -263,7 +263,8 @@
 			$('#chkAutoTime').attr('checked', false);
 			$("#chkAutoTime").checkboxradio("refresh");
 			//$( slidertimeselector ).slider( "option", "value", $( slidertimeselector ).slider( "option", "value") -60 );
-			$( slidertimeselector ).val($( slidertimeselector ).val() -60);
+			$( slidertimeselector ).val(parseInt($( slidertimeselector ).val()) - 60);
+			$( slidertimeselector ).slider('refresh');
 			ChangeSlide();
 		});
 		$( "#buttonSlideUp" ).click(function( event ) {
@@ -271,7 +272,9 @@
 			$('#chkAutoTime').attr('checked', false);
 			$("#chkAutoTime").checkboxradio("refresh");
 			//$( slidertimeselector ).slider( "option", "value", $( slidertimeselector ).slider( "option", "value") +60 );
-			$( slidertimeselector ).val($( slidertimeselector ).val() +60);
+			
+			$( slidertimeselector ).val(parseInt($( slidertimeselector ).val()) + 60);
+			$( slidertimeselector ).slider('refresh');
 			ChangeSlide();
 		});
 		

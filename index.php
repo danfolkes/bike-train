@@ -392,7 +392,9 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 							<div class="ui-block-a">
 								<input type="text" id="time" style="border: 0; color: #f6931f; font-weight: bold;" data-inline="true" />
 							</div>
-							<div class="ui-block-b"><input type='checkbox' name='chkAutoTime' id='chkAutoTime'  data-inline="true" /><label for="chkAutoTime">Keep Time</label></div>
+							<div class="ui-block-b"><input type='checkbox' name='chkAutoTime' id='chkAutoTime'  data-inline="true" />
+								<label for="chkAutoTime">Keep Current Time</label>
+							</div>
 						</fieldset>
 						
 						<div class="ui-grid-a">
@@ -418,7 +420,7 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 						try {
 							if ($db = new Sqlite3('db/biketrain.SQLite')) {
 								?> 
-								<h3>Saved Routes:</h3>
+								
 				
 								<?php
 								echo "<div class=\"accordion\"> ";
@@ -426,10 +428,72 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 									INNER JOIN UserRoute ON UserRoute.routeid = Route.id
 									INNER JOIN User ON UserRoute.userid= User.id
 									WHERE  User.uname = '{$cookieidentity}'
+									ORDER BY time
 									";
 								$SavedRoutes = $db->query($SavedRoutesSQL);
 								
-								while ($SavedRoute = $SavedRoutes->fetchArray()) {
+								$SavedRoutesArray = array();
+								while($SavedRoutesArray[]=$SavedRoutes->fetchArray());
+								
+								$SavedRoutesDaysName = array();
+								$SavedRoutesDaysLookup = array();
+								
+								$SavedRoutesDaysName[]="MONDAY";
+								$SavedRoutesDaysLookup[]="m,";
+								$SavedRoutesDaysName[]="TUESDAY";
+								$SavedRoutesDaysLookup[]="t,";
+								$SavedRoutesDaysName[]="WEDNESDAY";
+								$SavedRoutesDaysLookup[]="w,";
+								$SavedRoutesDaysName[]="THURSDAY";
+								$SavedRoutesDaysLookup[]="th,";
+								$SavedRoutesDaysName[]="FRIDAY";
+								$SavedRoutesDaysLookup[]="f,";
+								$SavedRoutesDaysName[]="SATURDAY";
+								$SavedRoutesDaysLookup[]="sa,";
+								$SavedRoutesDaysName[]="SUNDAY";
+								$SavedRoutesDaysLookup[]="su,";
+								
+								$i = 0;
+								echo "<div class='savedroutes'>";
+								echo "<h1>Routes Overview:</h1>";
+								
+								while ($i <= count($SavedRoutesDaysName)-1) {
+									$hasitems = false;
+									echo "<div class='savedrouteoverview'><h2>{$SavedRoutesDaysName[$i]}:</h2>";
+									foreach($SavedRoutesArray as $SavedRoute)
+									{
+										if(stristr($SavedRoute[days] . ",", $SavedRoutesDaysLookup[$i])) {
+											echo "<div class='savedroute'>";
+											echo "<span class='savedroutetime'>{$SavedRoute[time]}</span>";
+											echo "<span class='savedroutename'>";
+											if ($SavedRoute[startposition] > 0)	{
+												$splitname = split("-",$SavedRoute[name]);
+												
+												echo "" . $splitname[count($splitname)-1] . "-" . $splitname[0];
+											}
+											else
+												echo "{$SavedRoute[name]}";
+											echo "</span>";
+											echo "</div>";
+											$hasitems = true;
+										}
+									}
+									if ($hasitems == false) {
+										echo "<div class='savedroute'><span class='savedroutename'>no routes</span></div>";
+									}
+									echo "</div>";
+									
+									
+									$i++;
+								}
+								echo "</div>";
+								
+								
+								
+								echo "<h1>Manage Routes:</h1>";
+								foreach($SavedRoutesArray as $SavedRoute)
+								{
+									echo "<div class='manageroute'>";
 									if (!isset($SavedRoute[nickname]) || strlen($SavedRoute[nickname]) <= 0)
 										$SavedRoute[nickname] = "{$SavedRoute[name]} - {$SavedRoute[time]} - {$SavedRoute[days]}";
 									echo "<h3>{$SavedRoute[nickname]}</h3>";
@@ -439,16 +503,19 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 									echo "<br/>startposition: {$SavedRoute[startposition]}";
 									echo "<br/>days: {$SavedRoute[days]}";
 									echo "<br/>time: {$SavedRoute[time]}";
-									echo "<br/># other bikers: 1";
+									//echo "<br/># other bikers: 1";
 									echo "<form action='?delete' method='post'>";
 									echo "<br/>UserRouteID:{$SavedRoute[UserRouteID]}<br/>";
 									echo "<input type='hidden' name='deleteid' value='{$SavedRoute[UserRouteID]}' />";
-									echo "<button>Delete</button>";
+									echo "<button >Delete</button>";
 									echo "</form>";
-									echo "<br/>use this to create new";
+									echo "</div>";
 									echo "</div>";
 								}
+								
 								echo "</div>";
+								
+								
 								$db->close();
 							}
 						} catch(ErrorException $e) {
