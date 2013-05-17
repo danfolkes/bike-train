@@ -10,6 +10,11 @@
 <small>default. change this by copying right-info-area-default.php as right-info-area.php</small>
 <p>
 
-
-
-
+<h2>Tracks Coming Soon...</h2>
+<div>
+	<ul>
+		<li><a href="http://goo.gl/maps/qa46V">Lakeside-Innsbrook</a></li>
+		<li><a href="http://goo.gl/maps/hH4So">Mechanicsville-Main St. Station</a></li>
+		
+		
+</div>
