@@ -45,11 +45,11 @@ select option{
 }
 
 
-.biketrainbanner {
+/*.biketrainbanner {
 	height:56px;
 	width: 100%;
 	background-image: url(lunanaut_Bicycle_Sign_Symbol.png);
-}
+}*/
 input.ui-slider-input {
 	display : none !important;
 	
@@ -69,6 +69,13 @@ input.ui-slider-input {
 	border: .1em black dashed;
 }
 
+.ui-header {
+	background-image: url(lunanaut_Bicycle_Sign_Symbol.png);
+	background-size: 4.2em 2.1em;
+	background-position-y: center;
+	background-repeat:repeat-x;
+
+}
 @media ( min-width: 40em ) {
 	/* Show the table header rows and set all cells to display: table-cell */
 	.my-custom-breakpoint td,
@@ -86,3 +93,4 @@ input.ui-slider-input {
 		display: none;
 	}
 }
+

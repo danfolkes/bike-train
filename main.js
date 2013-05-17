@@ -185,12 +185,11 @@
 			});
 			google.maps.event.addListener(tmppoly, 'mouseover', function() {
 				MapItemHover(this.title);
-				
 			});
 			google.maps.event.addListener(tmppoly, 'mouseout', function() {
 				MapItemHoverOut(this.title);
-				
 			});
+			
 			/*markers1.push(new google.maps.Marker({
 				  position: lls[0],
 				  map: map,
@@ -225,8 +224,10 @@
 	  }
 	  
 	  function MapItemClick(i) {
-		$(".routeselector").effect("highlight", {}, 1000);
-		$('#routeselector_id'+extradata[i].id+'').prop('checked', true).focus();
+		//$('#routeselector_id'+extradata[i].id+'').prop('checked', true).focus();
+		$('#routeselector_id'+extradata[i].id+'').click().focus();
+		$('#routeselector_id'+extradata[i].id+'').checkboxradio("refresh");
+		updateform("routeselector");
 	  }
 	  function MapItemHover(i) {
 		polys[i].setOptions({

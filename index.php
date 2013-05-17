@@ -202,12 +202,24 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
   <body>
 <div data-role="page" id="mypage">
  <div data-role="header" >
+	
+	<?php
+	if (isset($cookieidentity)) {
+		?>
+		<a href="#left-panel" data-icon="arrow-l" data-theme="b">Account</a>
+		<?php
+	} else {
+	?><a data-ajax="false" href="?login" title="" data-icon="alert" data-theme="e"  data-role="button" data-inline="true">Login with Google</a>
+	<?php
+	}
+	
+	?>
 	<h1>Richmond Bike Train</h1>
-	<a href="#left-panel" data-icon="arrow-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-icon-nodisc">Saved Routes</a>
+	<a href="#right-panel" data-iconpos="right" data-icon="arrow-r" >Info</a>
 </div><!-- /header -->
 <div data-role="content">
 	<div class='form'>
-		<div class='biketrainbanner'></div>
+		<!--<div class='biketrainbanner'></div>-->
 			<p>
 				The <b>Bike Train</b> is a way for commuter bicyclers to coordinate routes and schedules to make bike riding in the city <b>safer</b> and <b>more fun</b>.
 				<br />
@@ -413,7 +425,17 @@ if ((isset($cookieidentity)) && (isset($_POST['routeselector']))) {
 			</div>
 	</div>
 </div><!-- /content -->
-<div data-role="panel" id="left-panel" data-position="left" data-theme="c" data-dismissible="false">
+<div data-role="panel" id="right-panel" data-position="right" data-theme="c" data-dismissible="true">
+	<a href="#" data-rel="close">Close menu</a>
+	<?php
+	if(file_exists('right-info-area.php'))
+    		include 'right-info-area.php';
+    	else
+    		include 'right-info-area-default.php';
+	?>
+	
+</div>
+<div data-role="panel" id="left-panel" data-position="left" data-theme="c" data-dismissible="true">
 	<a href="#" data-rel="close">Close menu</a>
 				<?php
 					if (isset($cookieidentity)) {
